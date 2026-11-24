@@ -14,18 +14,22 @@
 .
 ├── lectures/         # лекции — K01.pdf … K10.pdf
 ├── practical/        # методички практических работ — pr01.pdf … pr14.pdf
-├── practical-works/  # ВЫПОЛНЕННЫЕ практики, вариант 3 «Агентство недвижимости»
+├── practical-works/  # ВЫПОЛНЕННЫЕ практики
 │   ├── README.md
-│   ├── RealEstateAgency.sln
-│   ├── src/
-│   ├── tests/
-│   └── docs/         # отчёты pr01.md … pr07.md
+│   ├── RealEstateAgency.sln      # проект по варианту 3 «Агентство недвижимости»
+│   ├── src/ tests/ docs/         # отчёты pr01.md … pr07.md
+│   └── examples/                 # готовые примеры по методичкам
+│       ├── BookList/             # ПР 1–2
+│       ├── BookListIdentity/     # ПР 7
+│       ├── MyApp/                # ПР 12
+│       ├── IntegrationLab/       # ПР 13
+│       └── LibraryApp/           # ПР 14
 └── README.md
 ```
 
 - **K** — лекции (конспекты занятий);
 - **pr** — методические указания к практическим работам;
-- **practical-works** — готовый проект и отчёты по варианту 3.
+- **practical-works** — готовые практики: проект по варианту 3 (`src/`, `tests/`, `docs/`) и примеры по методичкам (`examples/`).
 
 ## Лекции
 
@@ -57,7 +61,17 @@
 
 Всего: 6 методичек, 87 страниц.
 
-## Выполненные практические работы (вариант 3)
+## Выполненные практические работы
+
+В репозитории два комплекта:
+
+1. **Проект по варианту 3** («Агентство недвижимости») — последовательное приложение,
+   в котором реализованы все темы курса: [practical-works/README.md](practical-works/README.md).
+2. **Готовые примеры по методичкам** — `BookList`, `BookListIdentity`, `MyApp`,
+   `IntegrationLab`, `LibraryApp`: [practical-works/examples/](practical-works/examples/).
+   У каждого проекта свой README с отчётом и ответами на контрольные вопросы.
+
+### Вариант 3 — агентство недвижимости
 
 Для варианта 3 — **«Агентство недвижимости»** — подготовлен один последовательный проект, в котором реализованы все темы курса. Подробности, запуск и отчёты — в [practical-works/README.md](practical-works/README.md).
 
@@ -70,6 +84,16 @@
 | 5 | Web API, внедрение зависимостей, Swagger, конфигурация | [pr05.md](practical-works/docs/pr05.md) |
 | 6 | Интеграция с внешним API через HttpClient | [pr06.md](practical-works/docs/pr06.md) |
 | 7 | Аутентификация, роли, клеймы и авторизация | [pr07.md](practical-works/docs/pr07.md) |
+
+### Примеры по методичкам (готовые проекты)
+
+| Практика | Проект | Что внутри |
+|:--:|--------|------------|
+| 1–2 | [BookList](practical-works/examples/BookList/) | MVC-каталог книг: CRUD, поиск, сортировка, валидация, пагинация |
+| 7 | [BookListIdentity](practical-works/examples/BookListIdentity/) | BookList + Identity: роли, клеймы, политика `OnlyAdults`, владельцы |
+| 12 | [MyApp](practical-works/examples/MyApp/) | Web API: слои, DI, Swagger, `IOptions<T>` |
+| 13 | [IntegrationLab](practical-works/examples/IntegrationLab/) | `HttpClient`, Polly, идемпотентность, интеграционные тесты |
+| 14 | [LibraryApp](practical-works/examples/LibraryApp/) | EF Core, DTO, репозитории, «многие ко многим» |
 
 ### Быстрый запуск
 

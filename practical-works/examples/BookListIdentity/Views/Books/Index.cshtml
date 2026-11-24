@@ -1,0 +1,98 @@
+@model IEnumerable<BookList.Models.Book>
+@{
+    ViewData["Title"] = "Список книг";
+
+    int page = ViewBag.Page is int p ? p : 1;
+    int totalPages = ViewBag.TotalPages is int t ? t : 1;
+    int total = ViewBag.Total is int tt ? tt : 0;
+    bool isAdmin = ViewBag.IsAdmin is bool b && b;
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1>Список книг</h1>
+    @if (isAdmin)
+    {
+        <a asp-action="Create" class="btn btn-primary">Добавить книгу</a>
+    }
+</div>
+
+<form asp-controller="Books" asp-action="Index" method="get" class="row g-2 mb-4">
+    <div class="col-md-4">
+        <label class="form-label" for="search">Поиск по названию</label>
+        <input type="text" name="search" id="search" class="form-control"
+               value="@ViewBag.Search" placeholder="Например: Толстой" />
+    </div>
+    <div class="col-md-2">
+        <label class="form-label" for="minYear">Год с</label>
+        <input type="number" name="minYear" id="minYear" class="form-control"
+               value="@ViewBag.MinYear" placeholder="1900" />
+    </div>
+    <div class="col-md-2">
+        <label class="form-label" for="maxYear">Год по</label>
+        <input type="number" name="maxYear" id="maxYear" class="form-control"
+               value="@ViewBag.MaxYear" placeholder="2100" />
+    </div>
+    <div class="col-md-4 d-flex align-items-end">
+        <button type="submit" class="btn btn-primary">Применить</button>
+        <a asp-action="Index" class="btn btn-outline-secondary ms-2">Сбросить</a>
+    </div>
+</form>
+
+<p>Всего книг: <strong>@total</strong></p>
+
+<table class="table table-bordered table-striped align-middle">
+    <thead>
+        <tr>
+            <th>Название</th>
+            <th>Автор</th>
+            <th>Жанр</th>
+            <th>Год</th>
+            <th>Владелец</th>
+            <th>Действия</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var book in Model)
+        {
+            <tr>
+                <td>@book.Title</td>
+                <td>@book.Author</td>
+                <td>@book.Genre</td>
+                <td>@book.Year</td>
+                <td>@(book.Owner?.FullName ?? "—")</td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@book.Id">Подробнее</a>
+                    @if (isAdmin)
+                    {
+                        <span>|</span>
+                        <a asp-action="Edit" asp-route-id="@book.Id">Изменить</a>
+                        <span>|</span>
+                        <a asp-action="Delete" asp-route-id="@book.Id">Удалить</a>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<nav aria-label="Навигация по страницам">
+    <ul class="pagination">
+        <li class="page-item @(page <= 1 ? "disabled" : "")">
+            <a class="page-link"
+               asp-action="Index"
+               asp-route-page="@(page - 1)"
+               asp-route-search="@ViewBag.Search"
+               asp-route-minYear="@ViewBag.MinYear"
+               asp-route-maxYear="@ViewBag.MaxYear">Назад</a>
+        </li>
+        <li class="page-item disabled"><span class="page-link">Страница @page из @totalPages</span></li>
+        <li class="page-item @(page >= totalPages ? "disabled" : "")">
+            <a class="page-link"
+               asp-action="Index"
+               asp-route-page="@(page + 1)"
+               asp-route-search="@ViewBag.Search"
+               asp-route-minYear="@ViewBag.MinYear"
+               asp-route-maxYear="@ViewBag.MaxYear">Вперёд</a>
+        </li>
+    </ul>
+</nav>

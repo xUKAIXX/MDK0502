@@ -1,0 +1,25 @@
+@model BookList.Models.Book
+@{
+    ViewData["Title"] = "Удалить книгу";
+}
+
+<h2>Удалить книгу</h2>
+
+<h3>Вы уверены, что хотите удалить эту книгу?</h3>
+
+<dl class="row">
+    <dt class="col-sm-3">Название</dt>
+    <dd class="col-sm-9">@Model.Title</dd>
+    <dt class="col-sm-3">Автор</dt>
+    <dd class="col-sm-9">@Model.Author</dd>
+    <dt class="col-sm-3">Жанр</dt>
+    <dd class="col-sm-9">@Model.Genre</dd>
+    <dt class="col-sm-3">Год</dt>
+    <dd class="col-sm-9">@Model.Year</dd>
+</dl>
+
+<form asp-action="Delete">
+    <input type="hidden" asp-for="Id" />
+    <button type="submit" class="btn btn-danger">Удалить</button>
+    <a asp-action="Index" class="btn btn-secondary">Отмена</a>
+</form>

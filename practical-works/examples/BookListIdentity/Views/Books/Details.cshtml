@@ -1,0 +1,24 @@
+@model BookList.Models.Book
+@{
+    ViewData["Title"] = "Подробнее о книге";
+}
+
+<h2>@Model.Title</h2>
+
+<dl class="row">
+    <dt class="col-sm-3">Автор</dt>
+    <dd class="col-sm-9">@Model.Author</dd>
+    <dt class="col-sm-3">Жанр</dt>
+    <dd class="col-sm-9">@Model.Genre</dd>
+    <dt class="col-sm-3">Год издания</dt>
+    <dd class="col-sm-9">@Model.Year</dd>
+    <dt class="col-sm-3">Владелец</dt>
+    <dd class="col-sm-9">@(Model.Owner?.FullName ?? "—")</dd>
+</dl>
+
+@if (User.IsInRole("Admin"))
+{
+    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Изменить</a>
+}
+
+<a asp-action="Index" class="btn btn-secondary">Назад к списку</a>

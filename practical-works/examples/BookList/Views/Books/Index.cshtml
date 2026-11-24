@@ -1,0 +1,93 @@
+@model IEnumerable<BookList.Models.Book>
+@{
+    ViewData["Title"] = "Список книг";
+}
+
+<h2>Список книг</h2>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Добавить книгу</a>
+</p>
+
+<form asp-action="Index" method="get" class="row g-2 mb-3">
+    <div class="col-md-4">
+        <label class="form-label">Поиск по названию или автору:</label>
+        <input type="text" name="search" value="@ViewData["CurrentFilter"]" class="form-control" />
+    </div>
+    <div class="col-md-3">
+        <label class="form-label">Жанр:</label>
+        <select name="genre" class="form-select" asp-items="@(new SelectList(ViewData["Genres"] as IEnumerable<string>))">
+            <option value="">Все жанры</option>
+        </select>
+    </div>
+    <div class="col-md-3 d-flex align-items-end">
+        <button type="submit" class="btn btn-secondary">Найти</button>
+        <a asp-action="Index" class="btn btn-link">Сбросить</a>
+    </div>
+</form>
+
+<p>Всего книг: <strong>@ViewData["TotalCount"]</strong></p>
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["TitleSort"]"
+                   asp-route-search="@ViewData["CurrentFilter"]" asp-route-genre="@ViewData["CurrentGenre"]">Название</a>
+            </th>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["AuthorSort"]"
+                   asp-route-search="@ViewData["CurrentFilter"]" asp-route-genre="@ViewData["CurrentGenre"]">Автор</a>
+            </th>
+            <th>Жанр</th>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["YearSort"]"
+                   asp-route-search="@ViewData["CurrentFilter"]" asp-route-genre="@ViewData["CurrentGenre"]">Год</a>
+            </th>
+            <th>Действия</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var b in Model)
+        {
+            <tr>
+                <td>@b.Title</td>
+                <td>@b.Author</td>
+                <td>@b.Genre</td>
+                <td>@b.Year</td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@b.Id">Подробнее</a> |
+                    <a asp-action="Edit" asp-route-id="@b.Id">Изменить</a> |
+                    <a asp-action="Delete" asp-route-id="@b.Id">Удалить</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@{
+    var page = (int)ViewData["Page"];
+    var totalPages = (int)ViewData["TotalPages"];
+}
+
+<nav aria-label="Навигация по страницам">
+    <ul class="pagination">
+        <li class="page-item @(page <= 1 ? "disabled" : "")">
+            <a class="page-link"
+               asp-action="Index"
+               asp-route-page="@(page - 1)"
+               asp-route-search="@ViewData["CurrentFilter"]"
+               asp-route-genre="@ViewData["CurrentGenre"]"
+               asp-route-sortOrder="@ViewData["CurrentSort"]">Назад</a>
+        </li>
+        <li class="page-item disabled"><span class="page-link">Страница @page из @totalPages</span></li>
+        <li class="page-item @(page >= totalPages ? "disabled" : "")">
+            <a class="page-link"
+               asp-action="Index"
+               asp-route-page="@(page + 1)"
+               asp-route-search="@ViewData["CurrentFilter"]"
+               asp-route-genre="@ViewData["CurrentGenre"]"
+               asp-route-sortOrder="@ViewData["CurrentSort"]">Вперёд</a>
+        </li>
+    </ul>
+</nav>

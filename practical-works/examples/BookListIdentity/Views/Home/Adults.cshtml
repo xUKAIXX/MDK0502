@@ -1,0 +1,13 @@
+@{
+    ViewData["Title"] = "Только для взрослых";
+}
+
+<h2 class="text-danger">Только для взрослых</h2>
+
+<p class="text-muted">
+    Эта страница доступна только пользователям, зарегистрированным больше года назад.
+    Проверку выполняет политика авторизации <strong>OnlyAdults</strong> по клейму
+    <strong>RegisteredAt</strong>.
+</p>
+
+<a asp-controller="Books" asp-action="Index" class="btn btn-secondary">К списку книг</a>
