@@ -1,0 +1,14 @@
+@{
+    ViewData["Title"] = "Только для взрослых";
+}
+
+<div class="card">
+    <div class="card-body p-4">
+        <h1 class="h4">Страница «Только для взрослых»</h1>
+        <p class="text-muted">
+            Эта страница доступна только пользователям, зарегистрированным более года назад.
+            Политика авторизации <code>OnlyAdults</code> проверяет клейм <code>RegisteredAt</code>.
+        </p>
+        <a asp-controller="Home" asp-action="Index" class="btn btn-primary">На главную</a>
+    </div>
+</div>

@@ -1,0 +1,102 @@
+@model HomeViewModel
+@{
+    ViewData["Title"] = "Главная";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h1 class="h3 mb-1">Агентство недвижимости</h1>
+        <p class="text-muted mb-0">Учебный проект по МДК 05.02 — вариант 3</p>
+    </div>
+    <div>
+        @if (User.IsInRole("Admin") || User.IsInRole("Agent"))
+        {
+            <a asp-controller="Properties" asp-action="Create" class="btn btn-primary">
+                <i class="bi bi-plus-lg"></i> Добавить объект
+            </a>
+        }
+    </div>
+</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <div class="text-muted small">Объектов в базе</div>
+                        <div class="fs-3 fw-bold">@Model.TotalProperties</div>
+                    </div>
+                    <i class="bi bi-building fs-1 text-primary"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <div class="text-muted small">Сделок</div>
+                        <div class="fs-3 fw-bold">@Model.TotalDeals</div>
+                    </div>
+                    <i class="bi bi-file-earmark-text fs-1 text-success"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <div class="text-muted small">База данных</div>
+                        <div class="fs-5 fw-bold">SQLite (локально)</div>
+                    </div>
+                    <i class="bi bi-database fs-1 text-info"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header bg-white d-flex justify-content-between align-items-center">
+        <h2 class="h5 mb-0">Новые объекты</h2>
+        <a asp-controller="Properties" asp-action="Index" class="btn btn-sm btn-outline-primary">Все объекты</a>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-hover mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th>Название</th>
+                    <th>Район</th>
+                    <th>Площадь</th>
+                    <th>Цена</th>
+                    <th>Статус</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var property in Model.RecentProperties)
+                {
+                    <tr>
+                        <td>
+                            <a asp-controller="Properties" asp-action="Details" asp-route-id="@property.Id" class="fw-semibold text-decoration-none">
+                                @property.Title
+                            </a>
+                            <div class="text-muted small">@property.Address</div>
+                        </td>
+                        <td>@property.District</td>
+                        <td>@property.Area м²</td>
+                        <td>@property.Price.ToString("N0") ₽</td>
+                        <td><span class="badge bg-secondary">@property.Status</span></td>
+                        <td class="text-end">
+                            <a asp-controller="Properties" asp-action="Details" asp-route-id="@property.Id" class="btn btn-sm btn-outline-primary">Подробнее</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

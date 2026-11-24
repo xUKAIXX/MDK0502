@@ -1,0 +1,21 @@
+@model AgentDto
+@{
+    ViewData["Title"] = "Удалить агента";
+}
+
+<div class="row justify-content-center">
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-body p-4">
+                <h1 class="h4 text-danger mb-3">Удалить агента?</h1>
+                <p>Вы действительно хотите удалить агента <strong>@Model.FullName</strong>?</p>
+                <p class="text-muted small">Если за агентом закреплены объекты, удаление будет отклонено базой данных.</p>
+                <form asp-action="Delete" method="post">
+                    <input type="hidden" name="id" value="@Model.Id" />
+                    <button type="submit" class="btn btn-danger">Удалить</button>
+                    <a asp-action="Index" class="btn btn-secondary">Отмена</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

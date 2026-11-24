@@ -1,0 +1,200 @@
+@model PropertyIndexViewModel
+@{
+    ViewData["Title"] = "Объекты недвижимости";
+    var statusOptions = new[]
+    {
+        new { Value = "", Text = "Все статусы" },
+        new { Value = "1", Text = "Продаётся" },
+        new { Value = "2", Text = "Сдаётся" },
+        new { Value = "3", Text = "Продано" },
+        new { Value = "4", Text = "Сдано" }
+    };
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+    <div>
+        <h1 class="h3 mb-1">Объекты недвижимости</h1>
+        <p class="text-muted mb-0">Всего объектов: <strong>@Model.Total</strong></p>
+    </div>
+    @if (User.IsInRole("Admin") || User.IsInRole("Agent"))
+    {
+        <a asp-action="Create" class="btn btn-primary">
+            <i class="bi bi-plus-lg"></i> Добавить объект
+        </a>
+    }
+</div>
+
+<div class="card mb-4">
+    <div class="card-body">
+        <form asp-action="Index" method="get" class="row g-3">
+            <div class="col-md-3">
+                <label class="form-label" for="search">Поиск</label>
+                <input type="text" name="search" id="search" class="form-control"
+                       value="@Model.Search" placeholder="Название, адрес или агент" />
+            </div>
+            <div class="col-md-2">
+                <label class="form-label" for="Status">Статус</label>
+                <select class="form-select" asp-for="Status">
+                    @foreach (var option in statusOptions)
+                    {
+                        <option value="@option.Value">@option.Text</option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label class="form-label" for="PropertyTypeId">Тип</label>
+                <select class="form-select" asp-for="PropertyTypeId">
+                    <option value="">Все типы</option>
+                    @foreach (var type in Model.PropertyTypes)
+                    {
+                        <option value="@type.Id">@type.Name</option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label class="form-label" for="DistrictId">Район</label>
+                <select class="form-select" asp-for="DistrictId">
+                    <option value="">Все районы</option>
+                    @foreach (var district in Model.Districts)
+                    {
+                        <option value="@district.Id">@district.Name</option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">Цена, ₽</label>
+                <div class="input-group">
+                    <input type="number" name="minPrice" class="form-control" value="@Model.MinPrice" placeholder="от" min="0" />
+                    <input type="number" name="maxPrice" class="form-control" value="@Model.MaxPrice" placeholder="до" min="0" />
+                </div>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label" for="SortBy">Сортировка</label>
+                <select class="form-select" asp-for="SortBy">
+                    <option value="">По дате добавления</option>
+                    <option value="price">По цене</option>
+                    <option value="area">По площади</option>
+                    <option value="year">По году постройки</option>
+                    <option value="title">По названию</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label class="form-label" for="SortOrder">Порядок</label>
+                <select class="form-select" asp-for="SortOrder">
+                    <option value="">По возрастанию</option>
+                    <option value="desc">По убыванию</option>
+                </select>
+            </div>
+            <div class="col-md-4 d-flex align-items-end gap-2">
+                <button type="submit" class="btn btn-primary">Применить</button>
+                <a asp-action="Index" class="btn btn-outline-secondary">Сбросить</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th>Объект</th>
+                    <th>Тип</th>
+                    <th>Район</th>
+                    <th>Площадь</th>
+                    <th>Комнат</th>
+                    <th>Цена</th>
+                    <th>Статус</th>
+                    <th class="text-end">Действия</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var property in Model.Items)
+                {
+                    <tr>
+                        <td>
+                            <a asp-action="Details" asp-route-id="@property.Id" class="fw-semibold text-decoration-none">
+                                @property.Title
+                            </a>
+                            <div class="text-muted small">@property.Address</div>
+                        </td>
+                        <td>@property.PropertyType</td>
+                        <td>@property.District</td>
+                        <td>@property.Area м²</td>
+                        <td>@property.Rooms</td>
+                        <td class="fw-semibold">@property.Price.ToString("N0") ₽</td>
+                        <td>
+                            <span class="badge @(property.Status == "Продано" || property.Status == "Сдано" ? "bg-secondary" : "bg-success")">
+                                @property.Status
+                            </span>
+                        </td>
+                        <td class="text-end text-nowrap">
+                            <a asp-action="Details" asp-route-id="@property.Id" class="btn btn-sm btn-outline-primary">Подробнее</a>
+                            @if (User.IsInRole("Admin") || User.IsInRole("Agent"))
+                            {
+                                <a asp-action="Edit" asp-route-id="@property.Id" class="btn btn-sm btn-outline-warning">Изменить</a>
+                                <a asp-action="Delete" asp-route-id="@property.Id" class="btn btn-sm btn-outline-danger">Удалить</a>
+                            }
+                        </td>
+                    </tr>
+                }
+                @if (!Model.Items.Any())
+                {
+                    <tr>
+                        <td colspan="8" class="text-center text-muted py-4">По заданным фильтрам ничего не найдено.</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@if (Model.TotalPages > 1)
+{
+    <nav class="mt-4" aria-label="Навигация по страницам">
+        <ul class="pagination justify-content-center">
+            <li class="page-item @(Model.Page <= 1 ? "disabled" : "")">
+                <a class="page-link"
+                   asp-action="Index"
+                   asp-route-search="@Model.Search"
+                   asp-route-status="@Model.Status"
+                   asp-route-propertyTypeId="@Model.PropertyTypeId"
+                   asp-route-districtId="@Model.DistrictId"
+                   asp-route-minPrice="@Model.MinPrice"
+                   asp-route-maxPrice="@Model.MaxPrice"
+                   asp-route-sortBy="@Model.SortBy"
+                   asp-route-sortOrder="@Model.SortOrder"
+                   asp-route-page="@(Model.Page - 1)">Назад</a>
+            </li>
+            @for (var page = 1; page <= Model.TotalPages; page++)
+            {
+                <li class="page-item @(page == Model.Page ? "active" : "")">
+                    <a class="page-link"
+                       asp-action="Index"
+                       asp-route-search="@Model.Search"
+                       asp-route-status="@Model.Status"
+                       asp-route-propertyTypeId="@Model.PropertyTypeId"
+                       asp-route-districtId="@Model.DistrictId"
+                       asp-route-minPrice="@Model.MinPrice"
+                       asp-route-maxPrice="@Model.MaxPrice"
+                       asp-route-sortBy="@Model.SortBy"
+                       asp-route-sortOrder="@Model.SortOrder"
+                       asp-route-page="@page">@page</a>
+                </li>
+            }
+            <li class="page-item @(Model.Page >= Model.TotalPages ? "disabled" : "")">
+                <a class="page-link"
+                   asp-action="Index"
+                   asp-route-search="@Model.Search"
+                   asp-route-status="@Model.Status"
+                   asp-route-propertyTypeId="@Model.PropertyTypeId"
+                   asp-route-districtId="@Model.DistrictId"
+                   asp-route-minPrice="@Model.MinPrice"
+                   asp-route-maxPrice="@Model.MaxPrice"
+                   asp-route-sortBy="@Model.SortBy"
+                   asp-route-sortOrder="@Model.SortOrder"
+                   asp-route-page="@(Model.Page + 1)">Вперёд</a>
+            </li>
+        </ul>
+    </nav>
+}

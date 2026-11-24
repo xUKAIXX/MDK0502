@@ -1,0 +1,15 @@
+# .NET build artifacts
+bin/
+obj/
+*.user
+*.suo
+.vs/
+
+# Local SQLite database
+*.db
+*.db-shm
+*.db-wal
+
+# IDE
+.idea/
+*.swp

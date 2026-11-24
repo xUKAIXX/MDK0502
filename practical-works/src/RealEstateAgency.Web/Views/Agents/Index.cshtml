@@ -1,0 +1,56 @@
+@model IReadOnlyList<AgentDto>
+@{
+    ViewData["Title"] = "Агенты";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h1 class="h3 mb-1">Агенты</h1>
+        <p class="text-muted mb-0">Всего агентов: <strong>@Model.Count</strong></p>
+    </div>
+    @if (User.IsInRole("Admin"))
+    {
+        <a asp-action="Create" class="btn btn-primary">
+            <i class="bi bi-plus-lg"></i> Добавить агента
+        </a>
+    }
+</div>
+
+<div class="card">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th>ФИО</th>
+                    <th>Телефон</th>
+                    <th>Email</th>
+                    <th>Стаж</th>
+                    <th>Объектов</th>
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <th class="text-end">Действия</th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var agent in Model)
+                {
+                    <tr>
+                        <td class="fw-semibold">@agent.FullName</td>
+                        <td>@agent.Phone</td>
+                        <td>@(agent.Email ?? "—")</td>
+                        <td>@agent.ExperienceYears лет</td>
+                        <td>@agent.PropertiesCount</td>
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <td class="text-end text-nowrap">
+                                <a asp-action="Edit" asp-route-id="@agent.Id" class="btn btn-sm btn-outline-warning">Изменить</a>
+                                <a asp-action="Delete" asp-route-id="@agent.Id" class="btn btn-sm btn-outline-danger">Удалить</a>
+                            </td>
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
